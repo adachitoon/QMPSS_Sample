@@ -17,6 +17,8 @@ type GalleryCardProps = {
 
 type Sigil = "blue" | "green" | "purple" | "red";
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const SIGIL_BY_TONE: Record<TagColor, Sigil> = {
   blue: "blue",
   green: "green",
@@ -49,7 +51,7 @@ export function GalleryCard({ skill, badgeIndex, priority }: GalleryCardProps) {
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-black">
         <Image
-          src={`/cards/sigil-${sigil}.png`}
+          src={`${BASE_PATH}/cards/sigil-${sigil}.png`}
           alt=""
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
