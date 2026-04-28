@@ -305,3 +305,48 @@
 :root {
   color-scheme: light dark;
 }
+
+/* Magic sigil rotation animations */
+@keyframes sigil-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes sigil-rotate-rev {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.sigil-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sigil-rotate 60s linear infinite;
+}
+.sigil-spin-rev {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sigil-rotate-rev 90s linear infinite;
+}
+.sigil-spin-slow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sigil-rotate 120s linear infinite;
+}
+
+/* On hover (driven by .group:hover from the card), accelerate + brighten */
+.group:hover .sigil-spin {
+  animation-duration: 14s;
+}
+.group:hover .sigil-spin-rev {
+  animation-duration: 18s;
+}
+.group:hover .sigil-spin-slow {
+  animation-duration: 24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sigil-spin,
+  .sigil-spin-rev,
+  .sigil-spin-slow {
+    animation: none;
+  }
+}

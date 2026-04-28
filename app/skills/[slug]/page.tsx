@@ -5,9 +5,14 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { skills, CATEGORY_LABEL } from "@/data/skills";
-import type { Category } from "@/data/skills";
-import { Cover } from "@/components/Cover";
+import {
+  skills,
+  MAIN_CATEGORY_LABEL,
+  MAIN_CATEGORY_COLOR,
+  SUB_CATEGORY_LABEL,
+  SUB_CATEGORY_COLOR,
+} from "@/data/skills";
+import type { MainCategory, Skill } from "@/data/skills";
 import { PropertyChip } from "@/components/PropertyChip";
 import { SiteNav } from "@/components/SiteNav";
 
@@ -25,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!skill) return { title: "ページが見つかりません" };
   return {
     title: `${skill.name} — スキルライブラリ`,
-    description: skill.description,
+    description: skill.description ?? `${skill.name}のリファレンスページ。`,
   };
 }
 
@@ -44,7 +49,6 @@ export default async function SkillPage({ params }: PageProps) {
       <SiteNav />
       <main className="bg-[var(--color-page)]">
         <article>
-          {/* ヘッダー / ヒーロー */}
           <section className="relative overflow-hidden border-b border-[var(--color-line-soft)]">
             <div
               aria-hidden
@@ -63,69 +67,67 @@ export default async function SkillPage({ params }: PageProps) {
                 <span>一覧に戻る</span>
               </Link>
 
-              <div className="mt-10 flex flex-wrap items-center gap-3 text-[12px] text-[var(--color-ink-muted)]">
-                <span className="font-mono tabular-nums">
+              <div className="mt-10 flex flex-wrap items-center gap-2">
+                <PropertyChip
+                  label={MAIN_CATEGORY_LABEL[skill.mainCategory]}
+                  color={MAIN_CATEGORY_COLOR[skill.mainCategory]}
+                  size="md"
+                />
+                {skill.subCategory && (
+                  <>
+                    <span className="text-[var(--color-ink-faint)]">›</span>
+                    <PropertyChip
+                      label={SUB_CATEGORY_LABEL[skill.subCategory]}
+                      color={SUB_CATEGORY_COLOR[skill.subCategory]}
+                      size="md"
+                    />
+                  </>
+                )}
+                <span aria-hidden className="block h-px w-6 bg-[var(--color-line)]" />
+                <span className="font-mono text-[12px] tabular-nums text-[var(--color-ink-muted)]">
                   {(idx + 1).toString().padStart(2, "0")} /{" "}
                   {total.toString().padStart(2, "0")}
                 </span>
-                <span aria-hidden className="block h-px w-8 bg-[var(--color-line)]" />
-                <span>{CATEGORY_LABEL[skill.category]}</span>
-                <span aria-hidden className="block h-px w-8 bg-[var(--color-line)]" />
-                <span>
-                  <span className="font-mono tabular-nums">{skill.readMinutes}</span>
-                  {" 分で読める"}
-                </span>
               </div>
 
-              <h1 className="mt-6 max-w-[18ch] text-[clamp(40px,7vw,84px)] font-bold leading-[1.05] tracking-[-0.04em] text-[var(--color-ink)]">
+              <h1 className="mt-6 max-w-[20ch] text-[clamp(36px,6vw,72px)] font-bold leading-[1.08] tracking-[-0.035em] text-[var(--color-ink)]">
                 {skill.name}
               </h1>
 
-              <p className="mt-7 max-w-[60ch] text-[18px] leading-[1.7] text-[var(--color-ink-muted)]">
-                {skill.description}
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-1.5">
-                {skill.tags.map((tag) => (
-                  <PropertyChip key={tag.label} label={tag.label} color={tag.color} size="md" />
-                ))}
-              </div>
+              {skill.description && (
+                <p className="mt-7 max-w-[60ch] text-[18px] leading-[1.7] text-[var(--color-ink-muted)]">
+                  {skill.description}
+                </p>
+              )}
             </div>
           </section>
 
-          {/* カバーバナー */}
-          <div className="mx-auto w-full max-w-[1180px] px-6 pt-10 sm:px-10 sm:pt-14">
-            <div className="relative">
-              <Cover palette={skill.cover} height="lg" />
-              <div className="absolute left-5 top-5 font-mono text-[10.5px] uppercase tracking-[0.22em] text-[var(--color-ink)]/60 mix-blend-multiply">
-                Cover · {skill.cover}
+          {skill.whenToUse && (
+            <div className="mx-auto w-full max-w-[920px] px-6 pt-16 sm:px-10 sm:pt-20">
+              <div className="grid gap-3 border-t border-b border-[var(--color-line)] py-10 sm:grid-cols-[160px_1fr] sm:gap-10 sm:py-14">
+                <div className="text-[12px] tracking-[0.06em] text-[var(--color-ink-muted)]">
+                  使うタイミング
+                </div>
+                <blockquote className="text-[clamp(20px,2.6vw,28px)] font-medium leading-[1.55] tracking-[-0.01em] text-[var(--color-ink)]">
+                  <span className="font-serif italic font-normal">「</span>
+                  {skill.whenToUse}
+                  <span className="font-serif italic font-normal">」</span>
+                </blockquote>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* 使うタイミング — プルクオート */}
-          <div className="mx-auto w-full max-w-[920px] px-6 pt-16 sm:px-10 sm:pt-20">
-            <div className="grid gap-3 border-t border-b border-[var(--color-line)] py-10 sm:grid-cols-[160px_1fr] sm:gap-10 sm:py-14">
-              <div className="text-[12px] tracking-[0.06em] text-[var(--color-ink-muted)]">
-                使うタイミング
-              </div>
-              <blockquote className="text-[clamp(20px,2.6vw,28px)] font-medium leading-[1.55] tracking-[-0.01em] text-[var(--color-ink)]">
-                <span className="font-serif italic font-normal">「</span>
-                {skill.whenToUse}
-                <span className="font-serif italic font-normal">」</span>
-              </blockquote>
-            </div>
-          </div>
-
-          {/* 本文 */}
           <div className="mx-auto w-full max-w-[760px] px-6 pb-20 pt-14 sm:px-10 sm:pb-32">
-            <div className="peek-prose">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{skill.body}</ReactMarkdown>
-            </div>
+            {skill.body ? (
+              <div className="peek-prose">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{skill.body}</ReactMarkdown>
+              </div>
+            ) : (
+              <ComingSoon />
+            )}
           </div>
         </article>
 
-        {/* 前 / 次 ナビ */}
         <nav className="border-t border-[var(--color-line)] bg-[var(--color-ink)] text-[var(--color-page)]">
           <div className="mx-auto grid w-full max-w-[1180px] grid-cols-1 divide-y divide-white/10 px-6 sm:grid-cols-2 sm:divide-x sm:divide-y-0 sm:px-10">
             {prev ? (
@@ -154,12 +156,26 @@ export default async function SkillPage({ params }: PageProps) {
   );
 }
 
+function ComingSoon() {
+  return (
+    <div className="flex flex-col items-start gap-4 border border-dashed border-[var(--color-line)] px-6 py-10 sm:px-8 sm:py-12">
+      <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-[var(--color-ink-faint)]">
+        Coming Soon
+      </span>
+      <p className="max-w-[52ch] text-[15px] leading-[1.7] text-[var(--color-ink-muted)]">
+        このスキルの中身（説明・使うタイミング・本文）はこれから書き起こします。
+        ナレッジが固まったら、こちらのページにそのまま追加されます。
+      </p>
+    </div>
+  );
+}
+
 function NextPrevLink({
   direction,
   skill,
 }: {
   direction: "prev" | "next";
-  skill: { slug: string; name: string; category: Category };
+  skill: Pick<Skill, "slug" | "name" | "mainCategory" | "subCategory">;
 }) {
   const isNext = direction === "next";
   return (
@@ -174,11 +190,12 @@ function NextPrevLink({
         {isNext ? "次へ" : "前へ"}
         {isNext && <ArrowRight className="h-3 w-3" strokeWidth={2} />}
       </span>
-      <span className="text-[28px] font-semibold leading-[1.2] tracking-[-0.025em] text-[var(--color-page)] sm:text-[36px]">
+      <span className="text-[24px] font-semibold leading-[1.25] tracking-[-0.02em] text-[var(--color-page)] sm:text-[30px]">
         {skill.name}
       </span>
       <span className="text-[11.5px] text-white/45">
-        {CATEGORY_LABEL[skill.category]}
+        {MAIN_CATEGORY_LABEL[skill.mainCategory as MainCategory]}
+        {skill.subCategory ? ` · ${SUB_CATEGORY_LABEL[skill.subCategory]}` : ""}
       </span>
     </Link>
   );
