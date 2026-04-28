@@ -1,0 +1,307 @@
+@import "tailwindcss";
+
+/* Notion design tokens — sourced from DESIGN.md (warm minimalism, whisper borders, Inter type system) */
+@theme {
+  /* Typography — Latin first (Inter), then Japanese (Noto Sans JP), then platform fallbacks */
+  --font-sans: var(--font-sans-en), var(--font-sans-jp), -apple-system, system-ui, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-serif-src), "Iowan Old Style", "Apple Garamond", Baskerville, "Times New Roman", serif;
+  --font-mono: var(--font-mono-src), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Notion warm neutrals */
+  --color-page: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-warm: #f6f5f4;
+  --color-surface-hover: #efeeec;
+  --color-surface-tint: #fbfaf9;
+
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #1f1f1f;
+  --color-ink-muted: #6b6963;
+  --color-ink-faint: #a8a39c;
+
+  --color-warm-dark: #0a0a0a;
+
+  /* Whisper border + dividers */
+  --color-line: rgb(10 10 10 / 0.12);
+  --color-line-soft: rgb(10 10 10 / 0.06);
+  --color-line-strong: rgb(10 10 10 / 0.22);
+
+  /* Notion blue */
+  --color-accent: #0075de;
+  --color-accent-hover: #005bab;
+  --color-accent-focus: #097fe8;
+  --color-accent-tint: #f2f9ff;
+
+  /* Notion-style tag palette (background / text pairs) — warm pastel */
+  --color-tag-gray-bg: #ebeced;
+  --color-tag-gray-text: #4f4f4f;
+  --color-tag-brown-bg: #e9e5e3;
+  --color-tag-brown-text: #64473a;
+  --color-tag-orange-bg: #faebdd;
+  --color-tag-orange-text: #d9730d;
+  --color-tag-yellow-bg: #fbf3db;
+  --color-tag-yellow-text: #dfab01;
+  --color-tag-green-bg: #ddedea;
+  --color-tag-green-text: #0f7b6c;
+  --color-tag-blue-bg: #ddebf1;
+  --color-tag-blue-text: #0b6e99;
+  --color-tag-purple-bg: #eae4f2;
+  --color-tag-purple-text: #6940a5;
+  --color-tag-pink-bg: #f4dfeb;
+  --color-tag-pink-text: #ad1a72;
+  --color-tag-red-bg: #fbe4e4;
+  --color-tag-red-text: #b34d4f;
+
+  /* Cover gradient stops (used by skill cards) */
+  --color-cover-amber: #fde68a;
+  --color-cover-rose: #fca5a5;
+  --color-cover-teal: #99f6e4;
+  --color-cover-sky: #bae6fd;
+  --color-cover-violet: #ddd6fe;
+  --color-cover-emerald: #bbf7d0;
+  --color-cover-stone: #e7e5e4;
+  --color-cover-fuchsia: #fbcfe8;
+  --color-cover-orange: #fed7aa;
+
+  /* Radii (DESIGN.md scale) */
+  --radius-micro: 4px;
+  --radius-subtle: 5px;
+  --radius-standard: 8px;
+  --radius-comfortable: 12px;
+  --radius-large: 16px;
+}
+
+/* Dark theme — warm dark per DESIGN.md (#31302e + soft-warm scale) */
+.dark {
+  --color-page: #191918;
+  --color-surface: #25241f;
+  --color-surface-warm: #1f1e1c;
+  --color-surface-hover: #2d2c28;
+  --color-surface-tint: #2a2926;
+
+  --color-ink: rgb(255 255 255 / 0.92);
+  --color-ink-soft: rgb(255 255 255 / 0.76);
+  --color-ink-muted: #a39e98;
+  --color-ink-faint: #6f6c68;
+
+  --color-warm-dark: #f6f5f4;
+
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-line-soft: rgb(255 255 255 / 0.05);
+  --color-line-strong: rgb(255 255 255 / 0.22);
+
+  --color-accent: #62aef0;
+  --color-accent-hover: #97c8f4;
+  --color-accent-focus: #62aef0;
+  --color-accent-tint: rgb(98 174 240 / 0.12);
+
+  /* Tag palette — darker translucent variants */
+  --color-tag-gray-bg: rgb(255 255 255 / 0.06);
+  --color-tag-gray-text: #cfcfcf;
+  --color-tag-brown-bg: rgb(170 130 90 / 0.18);
+  --color-tag-brown-text: #d4a07a;
+  --color-tag-orange-bg: rgb(217 115 13 / 0.18);
+  --color-tag-orange-text: #f0a350;
+  --color-tag-yellow-bg: rgb(223 171 1 / 0.16);
+  --color-tag-yellow-text: #e8c569;
+  --color-tag-green-bg: rgb(15 123 108 / 0.22);
+  --color-tag-green-text: #5fc7b6;
+  --color-tag-blue-bg: rgb(11 110 153 / 0.22);
+  --color-tag-blue-text: #6cbde0;
+  --color-tag-purple-bg: rgb(105 64 165 / 0.22);
+  --color-tag-purple-text: #b292e0;
+  --color-tag-pink-bg: rgb(173 26 114 / 0.18);
+  --color-tag-pink-text: #e479b8;
+  --color-tag-red-bg: rgb(179 77 79 / 0.22);
+  --color-tag-red-text: #e09094;
+}
+
+/* Notion shadow stacks (multi-layer, sub-0.05 opacity) */
+@layer base {
+  :root {
+    --shadow-card: 0 4px 18px rgb(0 0 0 / 0.04), 0 2.025px 7.847px rgb(0 0 0 / 0.027), 0 0.8px 2.925px rgb(0 0 0 / 0.02), 0 0.175px 1.041px rgb(0 0 0 / 0.01);
+    --shadow-card-hover: 0 6px 24px rgb(0 0 0 / 0.06), 0 3px 10px rgb(0 0 0 / 0.035), 0 1.2px 4px rgb(0 0 0 / 0.025), 0 0.3px 1.4px rgb(0 0 0 / 0.012);
+    --shadow-deep: 0 1px 3px rgb(0 0 0 / 0.01), 0 3px 7px rgb(0 0 0 / 0.02), 0 7px 15px rgb(0 0 0 / 0.02), 0 14px 28px rgb(0 0 0 / 0.04), 0 23px 52px rgb(0 0 0 / 0.05);
+  }
+
+  .dark {
+    --shadow-card: 0 4px 18px rgb(0 0 0 / 0.32), 0 2.025px 7.847px rgb(0 0 0 / 0.24), 0 0.8px 2.925px rgb(0 0 0 / 0.18), 0 0.175px 1.041px rgb(0 0 0 / 0.12);
+    --shadow-card-hover: 0 6px 24px rgb(0 0 0 / 0.4), 0 3px 10px rgb(0 0 0 / 0.3), 0 1.2px 4px rgb(0 0 0 / 0.22), 0 0.3px 1.4px rgb(0 0 0 / 0.14);
+    --shadow-deep: 0 1px 3px rgb(0 0 0 / 0.2), 0 3px 7px rgb(0 0 0 / 0.24), 0 7px 15px rgb(0 0 0 / 0.28), 0 14px 28px rgb(0 0 0 / 0.36), 0 23px 52px rgb(0 0 0 / 0.42);
+  }
+
+  html,
+  body {
+    background: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11", "case", "tnum";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Tabular nums + tracking for mono labels/indices */
+  .font-mono {
+    font-feature-settings: "tnum", "ss01", "ss02";
+  }
+
+  ::selection {
+    background: rgb(0 117 222 / 0.22);
+    color: var(--color-ink);
+  }
+
+  .dark ::selection {
+    background: rgb(98 174 240 / 0.28);
+  }
+
+  /* Notion-style scrollbar — narrow, faded, only on hover */
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background-clip: padding-box;
+  }
+  *:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(0 0 0 / 0.18);
+    background-clip: padding-box;
+  }
+  .dark *:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(255 255 255 / 0.18);
+    background-clip: padding-box;
+  }
+}
+
+/* Utility helpers used across components */
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+@utility shadow-card-hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+@utility shadow-deep {
+  box-shadow: var(--shadow-deep);
+}
+
+@utility border-whisper {
+  border: 1px solid var(--color-line);
+}
+
+@utility border-whisper-soft {
+  border: 1px solid var(--color-line-soft);
+}
+
+@utility border-strong {
+  border: 1px solid var(--color-line-strong);
+}
+
+/* Modern hairline used to underline mono labels */
+@utility hairline {
+  height: 1px;
+  background: var(--color-line);
+}
+
+/* Typography classes mirroring DESIGN.md hierarchy */
+@utility type-display {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -2.125px;
+}
+
+@utility type-h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+@utility type-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.15px;
+}
+
+@utility type-badge {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.33;
+  letter-spacing: 0.125px;
+}
+
+@utility type-caption {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-ink-muted);
+}
+
+/* Markdown body inside PeekPanel */
+.peek-prose {
+  color: var(--color-ink);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.peek-prose h1,
+.peek-prose h2,
+.peek-prose h3,
+.peek-prose h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.4px;
+  color: var(--color-ink);
+  font-weight: 700;
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+}
+.peek-prose h1 { font-size: 1.75rem; letter-spacing: -0.8px; }
+.peek-prose h2 { font-size: 1.35rem; letter-spacing: -0.5px; }
+.peek-prose h3 { font-size: 1.1rem; }
+.peek-prose p { margin: 0.6em 0; color: var(--color-ink-soft); }
+.peek-prose ul,
+.peek-prose ol { margin: 0.4em 0 0.6em; padding-left: 1.4em; color: var(--color-ink-soft); }
+.peek-prose ul { list-style: disc; }
+.peek-prose ol { list-style: decimal; }
+.peek-prose li { margin: 0.2em 0; padding-left: 0.2em; }
+.peek-prose li::marker { color: var(--color-ink-faint); }
+.peek-prose code {
+  font-family: var(--font-mono);
+  background: var(--color-surface-warm);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.86em;
+  color: #b34d4f;
+}
+.dark .peek-prose code { color: #e09094; }
+.peek-prose pre {
+  background: var(--color-surface-warm);
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.55;
+  border: 1px solid var(--color-line-soft);
+}
+.peek-prose pre code { background: transparent; padding: 0; color: inherit; }
+.peek-prose blockquote {
+  border-left: 3px solid var(--color-line);
+  padding-left: 14px;
+  color: var(--color-ink-muted);
+  margin: 0.8em 0;
+  font-style: normal;
+}
+.peek-prose a { color: var(--color-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.peek-prose hr { border: none; border-top: 1px solid var(--color-line-soft); margin: 1.6em 0; }
+
+/* Anti-flash for theme switching */
+:root {
+  color-scheme: light dark;
+}
